@@ -21,14 +21,14 @@ router.post('/login', function(request, response, next){
     var user_password = request.body.user_password;
 
     
-    var pass = 'toys' + user_hp + 'city2020';
+    var pass = 'toys' + user_password + 'city2020';
     var hash = md5(pass);
 
     if(user_hp && user_password){
-        const query = `SELECT * FROM tbl_user where handphone = "${user_hp}"`;
+        const query = `SELECT * FROM tbl_user where handphone = "${user_hp}" and password = "${hash}"`;
         database.query(query, function(error,data){
-          response.send(data);
-          // if(data.length > 0){
+          // response.send(data);
+          if(data.length > 0){
           //   for(var count = 0; count < data.length; count++){
           //     if(data[count].user_hp == hash){
           //       response.send('Correct Password');
@@ -36,7 +36,10 @@ router.post('/login', function(request, response, next){
           //       response.send('Incorrect Password');
           //     }
           //   }
-          // }
+            response.send('Correct Mobile Phone & Password');
+          }else{
+            response.send('Incorrect Mobile Phone & Password');
+          }
         });
     }else{
       response.send('Please Enter Email Address and Password Details1')
