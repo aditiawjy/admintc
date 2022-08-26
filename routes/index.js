@@ -2,6 +2,7 @@
 const { query } = require('express');
 var express = require('express');
 var router = express.Router();
+var md5 = require('md5');
 
 var database = require('../database');
 
@@ -16,21 +17,26 @@ router.get('/', function(req, res, next) {
 
 router.post('/login', function(request, response, next){
 
-    var user_email_address = request.body.user_email_address;
+    var user_hp = request.body.user_hp;
     var user_password = request.body.user_password;
 
-    if(user_email_address && user_password){
-        query = `SELECT * FROM user_login where user_email = "${user_email_address}"`;
-        database.query(query, function(error,data){
-          if(data.length > 0){
-            for(var count = 0; count < data.length; count++){
-              if(data[count].user_email == user_password){
+    
+    var pass = 'toys' + user_hp + 'city2020';
+    var hash = md5(pass);
 
-              }else{
-                response.send('Incorrect Password');
-              }
-            }
-          }
+    if(user_hp && user_password){
+        const query = `SELECT * FROM tbl_user where handphone = "${user_hp}"`;
+        database.query(query, function(error,data){
+          response.send(data);
+          // if(data.length > 0){
+          //   for(var count = 0; count < data.length; count++){
+          //     if(data[count].user_hp == hash){
+          //       response.send('Correct Password');
+          //     }else{
+          //       response.send('Incorrect Password');
+          //     }
+          //   }
+          // }
         });
     }else{
       response.send('Please Enter Email Address and Password Details1')
